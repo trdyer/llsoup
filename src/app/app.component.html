@@ -1,0 +1,22 @@
+<h1>Thermometer Data</h1>
+
+<ng-container *ngIf="allData$ | async as all">
+  <ng-container *ngFor="let foo of getKeys(all)">
+    <section>
+      <h2>
+        {{ foo }}
+      </h2>
+      <progress
+        [max]="
+          all[foo].raised > all[foo].goal ? all[foo].raised : all[foo].goal
+        "
+        [value]="all[foo].raised"
+      ></progress>
+      <p>
+        Raised {{ all[foo].raised | currency }} of
+        {{ all[foo].goal | currency }} goal
+      </p>
+    </section>
+  </ng-container>
+</ng-container>
+<router-outlet></router-outlet>
