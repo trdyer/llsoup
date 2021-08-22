@@ -13,4 +13,7 @@ type AllThermometers struct {
 	StJohns   *Thermometer `json:"stjohns"`
 	Toronto   *Thermometer `json:"toronto"`
 	Vancouver *Thermometer `json:"vancouver"`
+	London    *Thermometer `json:"london"`
+	Ottawa    *Thermometer `json:"ottawa"`
+	Winnipeg  *Thermometer `json:"winnipeg"`
 }

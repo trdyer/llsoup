@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"llsoup/handlers"
 	"os"
 
@@ -18,13 +19,16 @@ func main() {
 	api := r.Group("/api")
 	api.GET("/all", handlers.GetAllData)
 
-	api.GET("/halifax", handlers.GetThermometerDataFor(1152))
-	api.GET("/calgary", handlers.GetThermometerDataFor(1155))
-	api.GET("/edmonton", handlers.GetThermometerDataFor(1156))
-	api.GET("/montreal", handlers.GetThermometerDataFor(1148))
-	api.GET("/stjohns", handlers.GetThermometerDataFor(1151))
-	api.GET("/toronto", handlers.GetThermometerDataFor(1141))
-	api.GET("/vancouver", handlers.GetThermometerDataFor(1157))
+	api.GET(fmt.Sprintf("/%s", handlers.Halifax), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Halifax]))
+	api.GET(fmt.Sprintf("/%s", handlers.Calgary), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Calgary]))
+	api.GET(fmt.Sprintf("/%s", handlers.Edmonton), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Edmonton]))
+	api.GET(fmt.Sprintf("/%s", handlers.Montreal), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Montreal]))
+	api.GET(fmt.Sprintf("/%s", handlers.StJohns), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.StJohns]))
+	api.GET(fmt.Sprintf("/%s", handlers.Toronto), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Toronto]))
+	api.GET(fmt.Sprintf("/%s", handlers.Vancouver), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Vancouver]))
+	api.GET(fmt.Sprintf("/%s", handlers.London), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.London]))
+	api.GET(fmt.Sprintf("/%s", handlers.Ottawa), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Ottawa]))
+	api.GET(fmt.Sprintf("/%s", handlers.Winnipeg), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Winnipeg]))
 	r.Use(static.Serve("/", static.LocalFile("dist/llsoup", false)))
 	r.Run(":" + port)
 }

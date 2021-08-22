@@ -11,4 +11,7 @@ export interface AllData {
   stjohns: Thermometer;
   toronto: Thermometer;
   vancouver: Thermometer;
+  london: Thermometer;
+  ottawa: Thermometer;
+  winnipeg: Thermometer;
 }

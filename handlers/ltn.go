@@ -20,6 +20,9 @@ const (
 	StJohns   = "stjohns"
 	Toronto   = "toronto"
 	Vancouver = "vancouver"
+	Ottawa    = "ottawa"
+	London    = "london"
+	Winnipeg  = "winnipeg"
 )
 
 var CityIdMap = map[string]int{
@@ -30,6 +33,9 @@ var CityIdMap = map[string]int{
 	StJohns:   1151,
 	Toronto:   1141,
 	Vancouver: 1157,
+	London:    1143,
+	Ottawa:    1142,
+	Winnipeg:  1153,
 }
 
 func GetAllData(c *gin.Context) {
@@ -68,6 +74,21 @@ func GetAllData(c *gin.Context) {
 		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
 		return
 	}
+	lon, err := getThermometerDataFromID(CityIdMap[London])
+	if err != nil {
+		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
+		return
+	}
+	ott, err := getThermometerDataFromID(CityIdMap[Ottawa])
+	if err != nil {
+		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
+		return
+	}
+	peg, err := getThermometerDataFromID(CityIdMap[Winnipeg])
+	if err != nil {
+		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
+		return
+	}
 	c.JSON(http.StatusOK, models.AllThermometers{
 		Halifax:   hfx,
 		Calgary:   cal,
@@ -76,6 +97,9 @@ func GetAllData(c *gin.Context) {
 		StJohns:   stj,
 		Toronto:   tor,
 		Vancouver: yvr,
+		London:    lon,
+		Ottawa:    ott,
+		Winnipeg:  peg,
 	})
 }
 
