@@ -18,7 +18,6 @@ func main() {
 	r.Use(cors.Default())
 	api := r.Group("/api")
 	api.GET("/all", handlers.GetAllData)
-	api.GET("/canada", handlers.GetNationalThermometerData)
 	api.GET(fmt.Sprintf("/%s", handlers.Halifax), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Halifax]))
 	api.GET(fmt.Sprintf("/%s", handlers.Calgary), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Calgary]))
 	api.GET(fmt.Sprintf("/%s", handlers.Edmonton), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Edmonton]))
