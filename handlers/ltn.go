@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"llsoup/models"
 	"net/http"
+	"net/http/cookiejar"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/anaskhan96/soup"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/net/publicsuffix"
 )
 
 const (
@@ -104,14 +107,19 @@ func GetAllData(c *gin.Context) {
 }
 
 func GetNationalThermometerData(c *gin.Context) {
-
-	client := &http.Client{}
+	u, _ := url.Parse("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_national")
+	jar, _ := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
+	client := &http.Client{
+		Jar: jar,
+	}
 	s, err := soup.GetWithClient("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_national", client)
 	if err != nil {
 		fmt.Println(err)
 	}
+	for _, cookie := range jar.Cookies(u) {
+		fmt.Println(cookie.Name, cookie.Value)
+	}
 	c.JSON(http.StatusOK, s)
-
 }
 
 func GetThermometerDataFor(id int) gin.HandlerFunc {
