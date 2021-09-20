@@ -103,6 +103,17 @@ func GetAllData(c *gin.Context) {
 	})
 }
 
+func GetNationalThermometerData(c *gin.Context) {
+
+	client := &http.Client{}
+	s, err := soup.GetWithClient("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_national", client)
+	if err != nil {
+		fmt.Println(err)
+	}
+	c.JSON(http.StatusOK, s)
+
+}
+
 func GetThermometerDataFor(id int) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		thermDATA, err := getThermometerDataFromID(id)
