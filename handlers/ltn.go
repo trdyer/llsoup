@@ -14,7 +14,7 @@ import (
 
 const (
 	Halifax   = "halifax"
-	Calgary   = "calagry"
+	Calgary   = "calgary"
 	Edmonton  = "edmonton"
 	Montreal  = "montreal"
 	StJohns   = "stjohns"
@@ -27,7 +27,7 @@ const (
 
 var CityIdMap = map[string]int{
 	Halifax:   1152,
-	Calgary:   1155,
+	Calgary:   1350,
 	Edmonton:  1156,
 	Montreal:  1148,
 	StJohns:   1151,
