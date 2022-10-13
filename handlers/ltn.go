@@ -13,94 +13,61 @@ import (
 )
 
 const (
-	Halifax   = "halifax"
-	Calgary   = "calgary"
-	Edmonton  = "edmonton"
-	Montreal  = "montreal"
-	StJohns   = "stjohns"
-	Toronto   = "toronto"
-	Vancouver = "vancouver"
-	Ottawa    = "ottawa"
-	London    = "london"
-	Winnipeg  = "winnipeg"
+	Halifax       = "halifax"
+	Calgary       = "calgary"
+	Edmonton      = "edmonton"
+	Montreal      = "montreal"
+	StJohns       = "stjohns"
+	Toronto       = "toronto"
+	Vancouver     = "vancouver"
+	Ottawa        = "ottawa"
+	London        = "london"
+	Winnipeg      = "winnipeg"
+	QuebecCity    = "QuebecCity"
+	Regina        = "regina"
+	Saskatoon     = "saskatoon"
+	Charlottetown = "charlottetown"
+	Fredericton   = "fredericton"
+	Canada        = "canada"
 )
 
 var CityIdMap = map[string]int{
-	Halifax:   1152,
-	Calgary:   1350,
-	Edmonton:  1156,
-	Montreal:  1148,
-	StJohns:   1151,
-	Toronto:   1141,
-	Vancouver: 1157,
-	London:    1143,
-	Ottawa:    1142,
-	Winnipeg:  1153,
+	Halifax:       1352,
+	Calgary:       1350,
+	Edmonton:      1351,
+	Montreal:      1354,
+	StJohns:       1356,
+	Toronto:       1357,
+	Vancouver:     1358,
+	London:        1353,
+	Ottawa:        1355,
+	Winnipeg:      1359,
+	QuebecCity:    1360,
+	Regina:        1361,
+	Saskatoon:     1362,
+	Charlottetown: 1363,
+	Fredericton:   1364,
 }
 
 func GetAllData(c *gin.Context) {
-	hfx, err := getThermometerDataFromID(CityIdMap[Halifax])
-	if err != nil {
-		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
-		return
+	combinedData := models.AllThermometers{}
+	for city, cityID := range CityIdMap {
+		val, err := getThermometerDataFromID(cityID)
+		if err != nil {
+			fmt.Printf("Error parsing LLS %s amount raised", city)
+			val = &models.Thermometer{Raised: 0, Goal: 1}
+		}
+		combinedData[city] = val
 	}
-	cal, err := getThermometerDataFromID(CityIdMap[Calgary])
-	if err != nil {
-		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
-		return
+	totalRaised := 0.0
+	for _, j := range combinedData {
+		totalRaised += j.Raised
 	}
-	yeg, err := getThermometerDataFromID(CityIdMap[Edmonton])
-	if err != nil {
-		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
-		return
+	combinedData[Canada] = &models.Thermometer{
+		Raised: totalRaised,
+		Goal:   5800000,
 	}
-	mtl, err := getThermometerDataFromID(CityIdMap[Montreal])
-	if err != nil {
-		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
-		return
-	}
-	stj, err := getThermometerDataFromID(CityIdMap[StJohns])
-	if err != nil {
-		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
-		return
-	}
-	tor, err := getThermometerDataFromID(CityIdMap[Toronto])
-	if err != nil {
-		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
-		return
-	}
-	yvr, err := getThermometerDataFromID(CityIdMap[Vancouver])
-	if err != nil {
-		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
-		return
-	}
-	lon, err := getThermometerDataFromID(CityIdMap[London])
-	if err != nil {
-		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
-		return
-	}
-	ott, err := getThermometerDataFromID(CityIdMap[Ottawa])
-	if err != nil {
-		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
-		return
-	}
-	peg, err := getThermometerDataFromID(CityIdMap[Winnipeg])
-	if err != nil {
-		c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
-		return
-	}
-	c.JSON(http.StatusOK, models.AllThermometers{
-		Halifax:   hfx,
-		Calgary:   cal,
-		Edmonton:  yeg,
-		Montreal:  mtl,
-		StJohns:   stj,
-		Toronto:   tor,
-		Vancouver: yvr,
-		London:    lon,
-		Ottawa:    ott,
-		Winnipeg:  peg,
-	})
+	c.JSON(http.StatusOK, combinedData)
 }
 
 func GetThermometerDataFor(id int) gin.HandlerFunc {

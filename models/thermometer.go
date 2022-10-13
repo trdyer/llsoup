@@ -5,15 +5,4 @@ type Thermometer struct {
 	Goal   uint64  `json:"goal"`
 }
 
-type AllThermometers struct {
-	Halifax   *Thermometer `json:"halifax"`
-	Calgary   *Thermometer `json:"calgary"`
-	Edmonton  *Thermometer `json:"edmonton"`
-	Montreal  *Thermometer `json:"montreal"`
-	StJohns   *Thermometer `json:"stjohns"`
-	Toronto   *Thermometer `json:"toronto"`
-	Vancouver *Thermometer `json:"vancouver"`
-	London    *Thermometer `json:"london"`
-	Ottawa    *Thermometer `json:"ottawa"`
-	Winnipeg  *Thermometer `json:"winnipeg"`
-}
+type AllThermometers map[string]*Thermometer
