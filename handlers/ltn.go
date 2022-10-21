@@ -62,8 +62,9 @@ func GetAllData(c *gin.Context) {
 		combinedData[city] = val
 	}
 	totalRaised := 0.0
-	for _, j := range combinedData {
+	for city, j := range combinedData {
 		totalRaised += j.Raised
+		fmt.Printf("cityy: %s, cityTotal: %f, subtotal: %f", city, j.Raised, totalRaised)
 	}
 	combinedData[Canada] = &models.Thermometer{
 		Raised: totalRaised,
