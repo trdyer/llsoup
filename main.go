@@ -28,6 +28,7 @@ func main() {
 	api.GET(fmt.Sprintf("/%s", handlers.London), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.London]))
 	api.GET(fmt.Sprintf("/%s", handlers.Ottawa), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Ottawa]))
 	api.GET(fmt.Sprintf("/%s", handlers.Winnipeg), handlers.GetThermometerDataFor(handlers.CityIdMap[handlers.Winnipeg]))
+	api.GET("/test", handlers.AttemptAPIAccess())
 	r.Use(static.Serve("/", static.LocalFile("dist/llsoup", false)))
 	r.Run(":" + port)
 }

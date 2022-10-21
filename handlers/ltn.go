@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
 	"llsoup/models"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -81,6 +83,21 @@ func GetThermometerDataFor(id int) gin.HandlerFunc {
 			return
 		}
 		c.JSON(http.StatusOK, thermDATA)
+	}
+}
+
+func AttemptAPIAccess() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		client := &http.Client{}
+		_, err := soup.GetWithClient("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national", client)
+		if err != nil {
+			c.AbortWithError(500, errors.New("Error calling lls site"))
+			return
+		}
+		ltnUrl, _ := url.Parse("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national")
+		fmt.Printf("%#+v", client.Jar.Cookies(ltnUrl))
+		c.Status(204)
 	}
 }
 
