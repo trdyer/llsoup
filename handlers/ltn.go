@@ -29,24 +29,26 @@ const (
 	Charlottetown = "charlottetown"
 	Fredericton   = "fredericton"
 	Canada        = "canada"
+	Blueprint     = "blueprint"
 )
 
 var CityIdMap = map[string]int{
-	Halifax:       1352,
-	Calgary:       1350,
 	Edmonton:      1351,
+	Halifax:       1352,
+	London:        1353,
 	Montreal:      1354,
+	Ottawa:        1355,
 	StJohns:       1356,
 	Toronto:       1357,
 	Vancouver:     1358,
-	London:        1353,
-	Ottawa:        1355,
 	Winnipeg:      1359,
 	QuebecCity:    1360,
 	Regina:        1361,
 	Saskatoon:     1362,
+	Calgary:       1350,
 	Charlottetown: 1363,
 	Fredericton:   1364,
+	Blueprint:     1370,
 }
 
 func GetAllData(c *gin.Context) {
