@@ -106,6 +106,9 @@ func AttemptAPIAccess() gin.HandlerFunc {
 			fmt.Println(err)
 		}
 		fmt.Printf("we have %d cookies", len(client.Jar.Cookies(ltnUrl)))
+		for _, b := range jar.Cookies(ltnUrl) {
+			fmt.Println(b.Name, b.Value)
+		}
 		fmt.Printf("%#+v", client.Jar.Cookies(ltnUrl))
 		c.Status(204)
 	}
