@@ -96,6 +96,7 @@ func AttemptAPIAccess() gin.HandlerFunc {
 			c.AbortWithError(500, errors.New("Error calling lls site"))
 			return
 		}
+		fmt.Println("parsing LTN URL")
 		ltnUrl, err := url.Parse("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national")
 		if err != nil {
 			fmt.Println("err parsing ltn url")
