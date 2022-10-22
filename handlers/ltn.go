@@ -1,12 +1,12 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"llsoup/models"
 	"net/http"
 	"net/http/cookiejar"
-	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -99,17 +99,30 @@ func AttemptAPIAccess() gin.HandlerFunc {
 			c.AbortWithError(500, errors.New("Error calling lls site"))
 			return
 		}
-		fmt.Println("parsing LTN URL")
-		ltnUrl, err := url.Parse("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national")
+		// fmt.Println("parsing LTN URL")
+		// ltnUrl, err := url.Parse("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national")
+		// if err != nil {
+		// 	fmt.Println("err parsing ltn url")
+		// 	fmt.Println(err)
+		// }
+		// cookieMap := map[string]string{}
+		// fmt.Printf("we have %d cookies\n", len(client.Jar.Cookies(ltnUrl)))
+		// for _, b := range jar.Cookies(ltnUrl) {
+		// 	cookieMap[b.Name] = b.Value
+		// }
+		resp, err := client.Get("https://secure.llscanada.org/site/CRConsAPI?luminateExtend=1.8.2&api_key=qx8ztp18oatitUCr&method=getLoginUrl&response_format=json&v=1.0")
 		if err != nil {
-			fmt.Println("err parsing ltn url")
 			fmt.Println(err)
+			c.AbortWithError(500, errors.New("Error calling lls site"))
+			return
 		}
-		fmt.Printf("we have %d cookies", len(client.Jar.Cookies(ltnUrl)))
-		for _, b := range jar.Cookies(ltnUrl) {
-			fmt.Println(b.Name, b.Value)
+		var responseBody interface{}
+		defer resp.Body.Close()
+		err = json.NewDecoder(resp.Body).Decode(responseBody)
+		if err != nil {
+			fmt.Println(err)
+			c.AbortWithError(500, errors.New("Error calling lls login"))
 		}
-		fmt.Printf("%#+v", client.Jar.Cookies(ltnUrl))
 		c.Status(204)
 	}
 }
