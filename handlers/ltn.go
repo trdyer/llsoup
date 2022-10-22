@@ -92,6 +92,7 @@ func AttemptAPIAccess() gin.HandlerFunc {
 		client := &http.Client{}
 		_, err := soup.GetWithClient("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national", client)
 		if err != nil {
+			fmt.Println(err)
 			c.AbortWithError(500, errors.New("Error calling lls site"))
 			return
 		}
