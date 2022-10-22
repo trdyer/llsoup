@@ -175,7 +175,7 @@ func AttemptAPIAccess() gin.HandlerFunc {
 			return
 		}
 		fmt.Printf("%#+v\n", t)
-		c.Status(204)
+		c.JSON(http.StatusOK, t)
 	}
 }
 
