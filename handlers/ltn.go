@@ -89,9 +89,9 @@ func GetThermometerDataFor(id int) gin.HandlerFunc {
 
 func AttemptAPIAccess() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
+		jar, _ := cookiejar.New(nil)
 		client := &http.Client{
-			Jar: &cookiejar.Jar{},
+			Jar: jar,
 		}
 		_, err := soup.GetWithClient("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national", client)
 		if err != nil {
