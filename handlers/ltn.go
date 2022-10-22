@@ -56,6 +56,26 @@ var CityIdMap = map[string]int{
 	Blueprint:     1370,
 }
 
+var CityGoalMap = map[string]uint64{
+	Edmonton:      325000,
+	Halifax:       769000,
+	London:        275000,
+	Montreal:      1200000,
+	Ottawa:        257777,
+	StJohns:       200000,
+	Toronto:       1400000,
+	Vancouver:     1200000,
+	Winnipeg:      225000,
+	QuebecCity:    100000,
+	Regina:        40000,
+	Saskatoon:     143000,
+	Calgary:       890000,
+	Charlottetown: 27300,
+	Fredericton:   31500,
+	Blueprint:     1000000,
+	Canada:        5800000,
+}
+
 func GetAllData(c *gin.Context) {
 	combinedData := models.AllThermometers{}
 	for city, cityID := range CityIdMap {
@@ -95,58 +115,68 @@ func AttemptAPIAccess() gin.HandlerFunc {
 		client := &http.Client{
 			Jar: jar,
 		}
-		_, err := client.Get("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national")
-		if err != nil {
+		api := &APIAccessor{
+			c: client,
+		}
+		if err := api.Login(); err != nil {
 			fmt.Println(err)
-			c.AbortWithError(500, errors.New("Error calling lls site"))
+			c.AbortWithError(500, err)
 			return
 		}
-		resp, err := client.Get("https://secure.llscanada.org/site/CRConsAPI?luminateExtend=1.8.2&api_key=qx8ztp18oatitUCr&method=getLoginUrl&response_format=json&v=1.0")
+		// _, err := client.Get("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national")
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	c.AbortWithError(500, errors.New("Error calling lls site"))
+		// 	return
+		// }
+		// resp, err := client.Get("https://secure.llscanada.org/site/CRConsAPI?luminateExtend=1.8.2&api_key=qx8ztp18oatitUCr&method=getLoginUrl&response_format=json&v=1.0")
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	c.AbortWithError(500, errors.New("Error calling lls site"))
+		// 	return
+		// }
+		// responseBody := &responseBody{}
+		// defer resp.Body.Close()
+		// err = json.NewDecoder(resp.Body).Decode(responseBody)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	c.AbortWithError(500, errors.New("Error calling lls login"))
+		// 	return
+		// }
+		// urlValues := url.Values{
+		// 	"method":                  []string{"render"},
+		// 	"content":                 []string{"[[S42:1352:dollars]]"},
+		// 	"api_key":                 []string{"qx8ztp18oatitUCr"},
+		// 	"response_format":         []string{"json"},
+		// 	"suppress_response_codes": []string{"true"},
+		// 	"v":                       []string{"1.0"},
+		// 	"auth":                    []string{responseBody.GetLoginResponse.Token},
+		// 	"JSESSIONID":              []string{responseBody.GetLoginResponse.JSESSIONID},
+		// 	"ts":                      []string{fmt.Sprintf("%13d", time.Now().Unix())},
+		// }
+		// resp2, err := client.PostForm(fmt.Sprintf("https://secure.llscanada.org/site/CRContentAPI;jsessionid=%s", responseBody.GetLoginResponse.RoutingID), urlValues)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	c.AbortWithError(500, errors.New("Error calling lls API call"))
+		// 	return
+		// }
+		// apiResponse := &APIResponse{}
+		// defer resp2.Body.Close()
+		// err = json.NewDecoder(resp2.Body).Decode(apiResponse)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	c.AbortWithError(500, errors.New("Error calling lls login"))
+		// 	return
+		// }
+		t, err := api.GetDataForCity(Halifax)
 		if err != nil {
 			fmt.Println(err)
-			c.AbortWithError(500, errors.New("Error calling lls site"))
+			c.AbortWithError(500, errors.New("Error calling get City Data"))
 			return
 		}
-		responseBody := &responseBody{}
-		defer resp.Body.Close()
-		err = json.NewDecoder(resp.Body).Decode(responseBody)
-		if err != nil {
-			fmt.Println(err)
-			c.AbortWithError(500, errors.New("Error calling lls login"))
-			return
-		}
-		urlValues := url.Values{
-			"method":                  []string{"render"},
-			"content":                 []string{"[[S42:1352:dollars]]"},
-			"api_key":                 []string{"qx8ztp18oatitUCr"},
-			"response_format":         []string{"json"},
-			"suppress_response_codes": []string{"true"},
-			"v":                       []string{"1.0"},
-			"auth":                    []string{responseBody.GetLoginResponse.Token},
-			"JSESSIONID":              []string{responseBody.GetLoginResponse.JSESSIONID},
-			"ts":                      []string{fmt.Sprintf("%13d", time.Now().Unix())},
-		}
-		resp2, err := client.PostForm(fmt.Sprintf("https://secure.llscanada.org/site/CRContentAPI;jsessionid=%s", responseBody.GetLoginResponse.RoutingID), urlValues)
-		if err != nil {
-			fmt.Println(err)
-			c.AbortWithError(500, errors.New("Error calling lls API call"))
-			return
-		}
-		apiResponse := &APIResponse{}
-		defer resp2.Body.Close()
-		err = json.NewDecoder(resp2.Body).Decode(apiResponse)
-		if err != nil {
-			fmt.Println(err)
-			c.AbortWithError(500, errors.New("Error calling lls login"))
-			return
-		}
-		fmt.Printf("%#+v\n", apiResponse)
+		fmt.Printf("%#+v\n", t)
 		c.Status(204)
 	}
-}
-
-func getAPIDataForCity(client *http.Client) (*models.Thermometer, error) {
-	return nil, nil
 }
 
 func getThermometerDataFromID(id int) (*models.Thermometer, error) {
@@ -189,6 +219,61 @@ type APIAccessor struct {
 	c          *http.Client
 	JSESSIONID string
 	Token      string
+	RoutingID  string
+}
+
+func (a *APIAccessor) Login() error {
+	_, err := a.c.Get("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national")
+	if err != nil {
+		return fmt.Errorf("Error getting JSESSIONID: %w", err)
+	}
+	resp, err := a.c.Get("https://secure.llscanada.org/site/CRConsAPI?luminateExtend=1.8.2&api_key=qx8ztp18oatitUCr&method=getLoginUrl&response_format=json&v=1.0")
+	if err != nil {
+		return fmt.Errorf("Error calling lls Login: %w", err)
+	}
+	responseBody := &responseBody{}
+	defer resp.Body.Close()
+	err = json.NewDecoder(resp.Body).Decode(responseBody)
+	if err != nil {
+		return fmt.Errorf("Error parsing LLS Login: %w")
+	}
+	a.JSESSIONID = responseBody.GetLoginResponse.JSESSIONID
+	a.Token = responseBody.GetLoginResponse.Token
+	return nil
+}
+
+func (a *APIAccessor) GetDataForCity(city string) (*models.Thermometer, error) {
+	cityID := CityIdMap[city]
+	cityGoal := CityGoalMap[city]
+	urlValues := url.Values{
+		"method":                  []string{"render"},
+		"content":                 []string{fmt.Sprintf("[[S42:%d:dollars]]", cityID)},
+		"api_key":                 []string{"qx8ztp18oatitUCr"},
+		"response_format":         []string{"json"},
+		"suppress_response_codes": []string{"true"},
+		"v":                       []string{"1.0"},
+		"auth":                    []string{a.Token},
+		"JSESSIONID":              []string{a.JSESSIONID},
+		"ts":                      []string{fmt.Sprintf("%13d", time.Now().Unix())},
+	}
+	resp2, err := a.c.PostForm(fmt.Sprintf("https://secure.llscanada.org/site/CRContentAPI;jsessionid=%s", a.RoutingID), urlValues)
+	if err != nil {
+		return nil, fmt.Errorf("Error calling LLS API: %w", err)
+	}
+	apiResponse := &APIResponse{}
+	defer resp2.Body.Close()
+	err = json.NewDecoder(resp2.Body).Decode(apiResponse)
+	if err != nil {
+		return nil, fmt.Errorf("Error parsing LLS API Data: %w", err)
+	}
+	raised, err := strconv.ParseFloat(apiResponse.RenderResponse.Content, 64)
+	if err != nil {
+		return nil, fmt.Errorf("Error parsing LLS API Data into number: %w", err)
+	}
+	return &models.Thermometer{
+		Goal:   cityGoal,
+		Raised: raised,
+	}, nil
 }
 
 type responseBody struct {
