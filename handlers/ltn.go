@@ -95,23 +95,12 @@ func AttemptAPIAccess() gin.HandlerFunc {
 		client := &http.Client{
 			Jar: jar,
 		}
-		_, err := soup.GetWithClient("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national", client)
+		_, err := client.Get("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national")
 		if err != nil {
 			fmt.Println(err)
 			c.AbortWithError(500, errors.New("Error calling lls site"))
 			return
 		}
-		// fmt.Println("parsing LTN URL")
-		// ltnUrl, err := url.Parse("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national")
-		// if err != nil {
-		// 	fmt.Println("err parsing ltn url")
-		// 	fmt.Println(err)
-		// }
-		// cookieMap := map[string]string{}
-		// fmt.Printf("we have %d cookies\n", len(client.Jar.Cookies(ltnUrl)))
-		// for _, b := range jar.Cookies(ltnUrl) {
-		// 	cookieMap[b.Name] = b.Value
-		// }
 		resp, err := client.Get("https://secure.llscanada.org/site/CRConsAPI?luminateExtend=1.8.2&api_key=qx8ztp18oatitUCr&method=getLoginUrl&response_format=json&v=1.0")
 		if err != nil {
 			fmt.Println(err)
@@ -156,6 +145,10 @@ func AttemptAPIAccess() gin.HandlerFunc {
 	}
 }
 
+func getAPIDataForCity(client *http.Client) (*models.Thermometer, error) {
+	return nil, nil
+}
+
 func getThermometerDataFromID(id int) (*models.Thermometer, error) {
 	resp, err := soup.Get(fmt.Sprintf("https://secure.llscanada.org/site/TR?fr_id=%d&pg=entry&s_locale=en_CA", id))
 	if err != nil {
@@ -190,6 +183,12 @@ func parseRaised(raised string) (float64, error) {
 	raised = strings.ReplaceAll(raised, "$", "")
 	raised = strings.ReplaceAll(raised, ",", "")
 	return strconv.ParseFloat(raised, 64)
+}
+
+type APIAccessor struct {
+	c          *http.Client
+	JSESSIONID string
+	Token      string
 }
 
 type responseBody struct {
