@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"llsoup/models"
 	"net/http"
@@ -123,59 +122,32 @@ func AttemptAPIAccess() gin.HandlerFunc {
 			c.AbortWithError(500, err)
 			return
 		}
-		// _, err := client.Get("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national")
+		// t, err := api.GetDataForCity(Halifax)
 		// if err != nil {
 		// 	fmt.Println(err)
-		// 	c.AbortWithError(500, errors.New("Error calling lls site"))
+		// 	c.AbortWithError(500, errors.New("Error calling get City Data"))
 		// 	return
 		// }
-		// resp, err := client.Get("https://secure.llscanada.org/site/CRConsAPI?luminateExtend=1.8.2&api_key=qx8ztp18oatitUCr&method=getLoginUrl&response_format=json&v=1.0")
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	c.AbortWithError(500, errors.New("Error calling lls site"))
-		// 	return
-		// }
-		// responseBody := &responseBody{}
-		// defer resp.Body.Close()
-		// err = json.NewDecoder(resp.Body).Decode(responseBody)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	c.AbortWithError(500, errors.New("Error calling lls login"))
-		// 	return
-		// }
-		// urlValues := url.Values{
-		// 	"method":                  []string{"render"},
-		// 	"content":                 []string{"[[S42:1352:dollars]]"},
-		// 	"api_key":                 []string{"qx8ztp18oatitUCr"},
-		// 	"response_format":         []string{"json"},
-		// 	"suppress_response_codes": []string{"true"},
-		// 	"v":                       []string{"1.0"},
-		// 	"auth":                    []string{responseBody.GetLoginResponse.Token},
-		// 	"JSESSIONID":              []string{responseBody.GetLoginResponse.JSESSIONID},
-		// 	"ts":                      []string{fmt.Sprintf("%13d", time.Now().Unix())},
-		// }
-		// resp2, err := client.PostForm(fmt.Sprintf("https://secure.llscanada.org/site/CRContentAPI;jsessionid=%s", responseBody.GetLoginResponse.RoutingID), urlValues)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	c.AbortWithError(500, errors.New("Error calling lls API call"))
-		// 	return
-		// }
-		// apiResponse := &APIResponse{}
-		// defer resp2.Body.Close()
-		// err = json.NewDecoder(resp2.Body).Decode(apiResponse)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	c.AbortWithError(500, errors.New("Error calling lls login"))
-		// 	return
-		// }
-		t, err := api.GetDataForCity(Halifax)
-		if err != nil {
-			fmt.Println(err)
-			c.AbortWithError(500, errors.New("Error calling get City Data"))
-			return
+
+		combinedData := models.AllThermometers{}
+		for city := range CityIdMap {
+			val, err := api.GetDataForCity(city)
+			if err != nil {
+				fmt.Printf("Error parsing LLS %s amount raised: %v", city, err)
+				val = &models.Thermometer{Raised: 0, Goal: 1}
+			}
+			combinedData[city] = val
 		}
-		fmt.Printf("%#+v\n", t)
-		c.JSON(http.StatusOK, t)
+		totalRaised := 0.0
+		for city, j := range combinedData {
+			totalRaised += j.Raised
+			fmt.Printf("city: %s, cityTotal: %.2f, subtotal: %.2f\n", city, j.Raised, totalRaised)
+		}
+		combinedData[Canada] = &models.Thermometer{
+			Raised: totalRaised,
+			Goal:   5800000,
+		}
+		c.JSON(http.StatusOK, combinedData)
 	}
 }
 
