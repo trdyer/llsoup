@@ -124,6 +124,7 @@ func AttemptAPIAccess() gin.HandlerFunc {
 			c.AbortWithError(500, errors.New("Error calling lls login"))
 			return
 		}
+		fmt.Printf("%#+v\n", responseBody)
 		c.Status(204)
 	}
 }
