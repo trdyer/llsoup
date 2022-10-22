@@ -76,11 +76,24 @@ var CityGoalMap = map[string]uint64{
 }
 
 func GetAllData(c *gin.Context) {
+	jar, _ := cookiejar.New(nil)
+	client := &http.Client{
+		Jar: jar,
+	}
+	api := &APIAccessor{
+		c: client,
+	}
+	if err := api.Login(); err != nil {
+		fmt.Println(err)
+		c.AbortWithError(500, err)
+		return
+	}
+
 	combinedData := models.AllThermometers{}
-	for city, cityID := range CityIdMap {
-		val, err := getThermometerDataFromID(cityID)
+	for city := range CityIdMap {
+		val, err := api.GetDataForCity(city)
 		if err != nil {
-			fmt.Printf("Error parsing LLS %s amount raised", city)
+			fmt.Printf("Error parsing LLS %s amount raised: %v", city, err)
 			val = &models.Thermometer{Raised: 0, Goal: 1}
 		}
 		combinedData[city] = val
@@ -88,7 +101,7 @@ func GetAllData(c *gin.Context) {
 	totalRaised := 0.0
 	for city, j := range combinedData {
 		totalRaised += j.Raised
-		fmt.Printf("city: %s, cityTotal: %.2f, subtotal: %.2f\n", city, j.Raised, totalRaised)
+		fmt.Printf("New! city: %s, cityTotal: %.2f, subtotal: %.2f\n", city, j.Raised, totalRaised)
 	}
 	combinedData[Canada] = &models.Thermometer{
 		Raised: totalRaised,
@@ -122,12 +135,6 @@ func AttemptAPIAccess() gin.HandlerFunc {
 			c.AbortWithError(500, err)
 			return
 		}
-		// t, err := api.GetDataForCity(Halifax)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	c.AbortWithError(500, errors.New("Error calling get City Data"))
-		// 	return
-		// }
 
 		combinedData := models.AllThermometers{}
 		for city := range CityIdMap {
