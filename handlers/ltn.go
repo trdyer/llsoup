@@ -141,7 +141,7 @@ func AttemptAPIAccess() gin.HandlerFunc {
 		totalRaised := 0.0
 		for city, j := range combinedData {
 			totalRaised += j.Raised
-			fmt.Printf("city: %s, cityTotal: %.2f, subtotal: %.2f\n", city, j.Raised, totalRaised)
+			fmt.Printf("New! city: %s, cityTotal: %.2f, subtotal: %.2f\n", city, j.Raised, totalRaised)
 		}
 		combinedData[Canada] = &models.Thermometer{
 			Raised: totalRaised,
