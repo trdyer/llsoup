@@ -7,9 +7,11 @@ import (
 	"llsoup/models"
 	"net/http"
 	"net/http/cookiejar"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/anaskhan96/soup"
 	"github.com/gin-gonic/gin"
@@ -124,7 +126,32 @@ func AttemptAPIAccess() gin.HandlerFunc {
 			c.AbortWithError(500, errors.New("Error calling lls login"))
 			return
 		}
-		fmt.Printf("%#+v\n", responseBody)
+		urlValues := url.Values{
+			"method":                  []string{"render"},
+			"content":                 []string{"[[S42:1352:dollars]]"},
+			"api_key":                 []string{"qx8ztp18oatitUCr"},
+			"response_format":         []string{"json"},
+			"suppress_response_codes": []string{"true"},
+			"v":                       []string{"1.0"},
+			"auth":                    []string{responseBody.GetLoginResponse.Token},
+			"JSESSIONID":              []string{responseBody.GetLoginResponse.JSESSIONID},
+			"ts":                      []string{fmt.Sprintf("%13d", time.Now().Unix())},
+		}
+		resp2, err := client.PostForm(fmt.Sprintf("https://secure.llscanada.org/site/CRContentAPI;jsessionid=%s", responseBody.GetLoginResponse.RoutingID), urlValues)
+		if err != nil {
+			fmt.Println(err)
+			c.AbortWithError(500, errors.New("Error calling lls API call"))
+			return
+		}
+		apiResponse := &APIResponse{}
+		defer resp2.Body.Close()
+		err = json.NewDecoder(resp2.Body).Decode(apiResponse)
+		if err != nil {
+			fmt.Println(err)
+			c.AbortWithError(500, errors.New("Error calling lls login"))
+			return
+		}
+		fmt.Printf("%#+v\n", apiResponse)
 		c.Status(204)
 	}
 }
@@ -174,4 +201,12 @@ type LoginResponse struct {
 	RoutingID  string `json:"routing_id"`
 	Url        string `json:"url"`
 	Token      string `json:"token"`
+}
+
+type APIResponse struct {
+	RenderResponse ContentBody `json:"renderResponse"`
+}
+
+type ContentBody struct {
+	Content string `json:"content"`
 }
