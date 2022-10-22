@@ -102,6 +102,7 @@ func AttemptAPIAccess() gin.HandlerFunc {
 			fmt.Println("err parsing ltn url")
 			fmt.Println(err)
 		}
+		fmt.Printf("we have %d cookies", len(client.Jar.Cookies(ltnUrl)))
 		fmt.Printf("%#+v", client.Jar.Cookies(ltnUrl))
 		c.Status(204)
 	}
