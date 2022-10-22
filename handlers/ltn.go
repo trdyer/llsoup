@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"llsoup/models"
 	"net/http"
+	"net/http/cookiejar"
 	"net/url"
 	"os"
 	"strconv"
@@ -89,7 +90,9 @@ func GetThermometerDataFor(id int) gin.HandlerFunc {
 func AttemptAPIAccess() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		client := &http.Client{}
+		client := &http.Client{
+			Jar: &cookiejar.Jar{},
+		}
 		_, err := soup.GetWithClient("https://secure.llscanada.org/site/SPageServer/?pagename=LTN_2022_national", client)
 		if err != nil {
 			fmt.Println(err)
