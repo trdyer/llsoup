@@ -267,7 +267,7 @@ func (a *APIAccessor) GetDataForCity(city string) (*models.Thermometer, error) {
 		return nil, fmt.Errorf("Error parsing LLS API Data: %w", err)
 	}
 	newAmount := strings.ReplaceAll(apiResponse.RenderResponse.Content, "$", "")
-	newAmount = strings.ReplaceAll(apiResponse.RenderResponse.Content, ",", "")
+	newAmount = strings.ReplaceAll(newAmount, ",", "")
 	raised, err := strconv.ParseFloat(newAmount, 64)
 	if err != nil {
 		return nil, fmt.Errorf("Error parsing LLS API Data into number: %w", err)
