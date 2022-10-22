@@ -116,12 +116,13 @@ func AttemptAPIAccess() gin.HandlerFunc {
 			c.AbortWithError(500, errors.New("Error calling lls site"))
 			return
 		}
-		var responseBody interface{}
+		responseBody := &responseBody{}
 		defer resp.Body.Close()
 		err = json.NewDecoder(resp.Body).Decode(responseBody)
 		if err != nil {
 			fmt.Println(err)
 			c.AbortWithError(500, errors.New("Error calling lls login"))
+			return
 		}
 		c.Status(204)
 	}
@@ -161,4 +162,15 @@ func parseRaised(raised string) (float64, error) {
 	raised = strings.ReplaceAll(raised, "$", "")
 	raised = strings.ReplaceAll(raised, ",", "")
 	return strconv.ParseFloat(raised, 64)
+}
+
+type responseBody struct {
+	GetLoginResponse LoginResponse `json:"getLoginUrlResponse"`
+}
+
+type LoginResponse struct {
+	JSESSIONID string `json:"JSESSIONID"`
+	RoutingID  string `json:"routing_id"`
+	Url        string `json:"url"`
+	Token      string `json:"token"`
 }
