@@ -17,61 +17,62 @@ import (
 )
 
 const (
-	Halifax       = "halifax"
 	Calgary       = "calgary"
-	Edmonton      = "edmonton"
+	Halifax       = "halifax"
 	Montreal      = "montreal"
-	StJohns       = "stjohns"
+	Ottawa        = "ottawa"
 	Toronto       = "toronto"
 	Vancouver     = "vancouver"
-	Ottawa        = "ottawa"
-	London        = "london"
-	Winnipeg      = "winnipeg"
-	QuebecCity    = "QuebecCity"
-	Regina        = "regina"
-	Saskatoon     = "saskatoon"
-	Charlottetown = "charlottetown"
-	Fredericton   = "fredericton"
+	// Edmonton      = "edmonton"
+	// StJohns       = "stjohns"
+	// London        = "london"
+	// Winnipeg      = "winnipeg"
+	// QuebecCity    = "QuebecCity"
+	// Regina        = "regina"
+	// Saskatoon     = "saskatoon"
+	// Charlottetown = "charlottetown"
+	// Fredericton   = "fredericton"
 	Canada        = "canada"
-	Blueprint     = "blueprint"
+	// Blueprint     = "blueprint"
 )
 
 var CityIdMap = map[string]int{
-	Edmonton:      1351,
-	Halifax:       1352,
-	London:        1353,
-	Montreal:      1354,
-	Ottawa:        1355,
-	StJohns:       1356,
-	Toronto:       1357,
-	Vancouver:     1358,
-	Winnipeg:      1359,
-	QuebecCity:    1360,
-	Regina:        1361,
-	Saskatoon:     1362,
-	Calgary:       1350,
-	Charlottetown: 1363,
-	Fredericton:   1364,
-	Blueprint:     1370,
+	Calgary:       1410,
+	Halifax:       1412,
+	Montreal:      1414,
+	Ottawa:        1415,
+	Toronto:       1417,
+	Vancouver:     1418,
+
+
+	// Edmonton:      1351,
+	// London:        1353,
+	// StJohns:       1356,
+	// Winnipeg:      1359,
+	// QuebecCity:    1360,
+	// Regina:        1361,
+	// Saskatoon:     1362,
+	// Charlottetown: 1363,
+	// Fredericton:   1364,
+	// Blueprint:     1370,
 }
 
 var CityGoalMap = map[string]uint64{
-	Edmonton:      325000,
-	Halifax:       769000,
-	London:        275000,
+	Calgary:       550000,
+	Halifax:       824000,
 	Montreal:      1200000,
-	Ottawa:        257777,
-	StJohns:       200000,
-	Toronto:       1400000,
-	Vancouver:     1200000,
-	Winnipeg:      225000,
-	QuebecCity:    100000,
-	Regina:        40000,
-	Saskatoon:     143000,
-	Calgary:       890000,
-	Charlottetown: 27300,
-	Fredericton:   31500,
-	Blueprint:     1000000,
+	Ottawa:        352500,
+	Toronto:       1341500,
+	Vancouver:     1075000,
+	// London:        275000,
+	// StJohns:       200000,
+	// Winnipeg:      225000,
+	// QuebecCity:    100000,
+	// Regina:        40000,
+	// Saskatoon:     143000,
+	// Charlottetown: 27300,
+	// Fredericton:   31500,
+	// Blueprint:     1000000,
 	Canada:        5800000,
 }
 
