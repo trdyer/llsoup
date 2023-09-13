@@ -1,0 +1,7 @@
+CHANGELOG.md
+.angular/
+dist/
+node_modules/
+.github/
+dev_utilities/
+qa_utilities/

@@ -1,0 +1,5 @@
+<header>
+  <h2>{{ data.city | titlecase }}</h2>
+</header>
+<progress [max]="data.goal > data.raised ? data.goal : data.raised" [value]="data.raised"></progress>
+<p>Raised {{ data.raised | currency }} of {{ data.goal | currency }} goal!</p>

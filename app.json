@@ -1,10 +1,5 @@
 {
   "name": "Start on Heroku: Go",
   "description": "Go Getting Started Example App",
-  "keywords": [
-    "getting-started",
-    "go",
-    "sample",
-    "example"
-  ]
+  "keywords": ["getting-started", "go", "sample", "example"]
 }

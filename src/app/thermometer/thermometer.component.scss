@@ -1,0 +1,42 @@
+:host {
+  border: 1px solid #000;
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+
+  padding: 0 2rem;
+}
+
+progress[value] {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 100%;
+  height: 2.5rem;
+
+  &::-webkit-progress-bar {
+    background-color: #eee;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+    padding: 5px;
+  }
+  &::-webkit-progress-value {
+    background-color: #f00;
+    border-radius: 20px;
+    background-size:
+      35px 20px,
+      100% 100%,
+      100% 100%;
+
+    &::after {
+      position: absolute;
+      right: 0;
+      top: -125%;
+      content: attr(value);
+    }
+  }
+}
+
+p {
+  font-size: 1.8rem;
+}

@@ -1,17 +1,9 @@
 export interface Thermometer {
   raised: number;
   goal: number;
+  city: string;
 }
 
 export interface AllData {
-  halifax: Thermometer;
-  calgary: Thermometer;
-  edmonton: Thermometer;
-  montreal: Thermometer;
-  stjohns: Thermometer;
-  toronto: Thermometer;
-  vancouver: Thermometer;
-  london: Thermometer;
-  ottawa: Thermometer;
-  winnipeg: Thermometer;
+  [key: string]: Thermometer;
 }

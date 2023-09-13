@@ -17,12 +17,12 @@ import (
 )
 
 const (
-	Calgary       = "calgary"
-	Halifax       = "halifax"
-	Montreal      = "montreal"
-	Ottawa        = "ottawa"
-	Toronto       = "toronto"
-	Vancouver     = "vancouver"
+	Calgary   = "calgary"
+	Halifax   = "halifax"
+	Montreal  = "montreal"
+	Ottawa    = "ottawa"
+	Toronto   = "toronto"
+	Vancouver = "vancouver"
 	// Edmonton      = "edmonton"
 	// StJohns       = "stjohns"
 	// London        = "london"
@@ -32,18 +32,17 @@ const (
 	// Saskatoon     = "saskatoon"
 	// Charlottetown = "charlottetown"
 	// Fredericton   = "fredericton"
-	Canada        = "canada"
+	Canada = "canada"
 	// Blueprint     = "blueprint"
 )
 
 var CityIdMap = map[string]int{
-	Calgary:       1410,
-	Halifax:       1412,
-	Montreal:      1414,
-	Ottawa:        1415,
-	Toronto:       1417,
-	Vancouver:     1418,
-
+	Calgary:   1410,
+	Halifax:   1412,
+	Montreal:  1414,
+	Ottawa:    1415,
+	Toronto:   1417,
+	Vancouver: 1418,
 
 	// Edmonton:      1351,
 	// London:        1353,
@@ -58,12 +57,12 @@ var CityIdMap = map[string]int{
 }
 
 var CityGoalMap = map[string]uint64{
-	Calgary:       550000,
-	Halifax:       824000,
-	Montreal:      1200000,
-	Ottawa:        352500,
-	Toronto:       1341500,
-	Vancouver:     1075000,
+	Calgary:   550000,
+	Halifax:   824000,
+	Montreal:  1200000,
+	Ottawa:    352500,
+	Toronto:   1341500,
+	Vancouver: 1075000,
 	// London:        275000,
 	// StJohns:       200000,
 	// Winnipeg:      225000,
@@ -73,7 +72,7 @@ var CityGoalMap = map[string]uint64{
 	// Charlottetown: 27300,
 	// Blueprint:     1000000,
 	// Fredericton:   31500,
-	Canada:        5800000,
+	Canada: 5800000,
 }
 
 func GetAllData(c *gin.Context) {
