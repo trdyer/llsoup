@@ -71,8 +71,8 @@ var CityGoalMap = map[string]uint64{
 	// Regina:        40000,
 	// Saskatoon:     143000,
 	// Charlottetown: 27300,
-	// Fredericton:   31500,
 	// Blueprint:     1000000,
+	// Fredericton:   31500,
 	Canada:        5800000,
 }
 
