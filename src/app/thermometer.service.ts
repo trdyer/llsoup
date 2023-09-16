@@ -9,7 +9,7 @@ export class ThermometerService {
   constructor(private http: HttpClient) {}
 
   public GetAllData(): Observable<Thermometer[]> {
-    return this.http.get<AllData>('https://thermometer.tristandyer.ca/api/all').pipe(
+    return this.http.get<AllData>('//thermometer.tristandyer.ca/api/all').pipe(
       map(d =>
         Object.keys(d).map(
           t =>
