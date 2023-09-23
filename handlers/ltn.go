@@ -36,34 +36,27 @@ const (
 	London     = "london"     //1413
 	Laval      = "laval"      //1450
 	Belleville = "belleville" //1470
-
+	Unknown1   = "unknown"
+	Unknown2   = "unknown2"
 )
 
 var CityIdMap = map[string]int{
 	Calgary:    1410,
+	Edmonton:   1411,
 	Halifax:    1412,
+	London:     1413,
 	Montreal:   1414,
 	Ottawa:     1415,
+	StJohns:    1416,
 	Toronto:    1417,
 	Vancouver:  1418,
+	Winnipeg:   1419,
+	Unknown1:   1420,
+	Unknown2:   1430,
 	Laval:      1450,
 	Belleville: 1470,
-	London:     1413,
 	Saskatoon:  1490,
-	Edmonton:   1411,
-	Winnipeg:   1419,
 	Regina:     1480,
-	StJohns:    1416,
-	// Edmonton:      1351,
-	// London:        1353,
-	// StJohns:       1356,
-	// Winnipeg:      1359,
-	// QuebecCity:    1360,
-	// Regina:        1361,
-	// Saskatoon:     1362,
-	// Charlottetown: 1363,
-	// Fredericton:   1364,
-	// Blueprint:     1370,
 }
 
 var CityGoalMap = map[string]uint64{
