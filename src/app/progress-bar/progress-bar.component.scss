@@ -1,0 +1,39 @@
+@keyframes linear-indeterminate {
+  0% {
+    margin-left: 0;
+    margin-right: 100%;
+  }
+
+  50% {
+    margin-left: 25%;
+    margin-right: 0%;
+  }
+
+  100% {
+    margin-left: 100%;
+    margin-right: 0;
+  }
+}
+
+:host {
+  background-color: #f00;
+  display: flex;
+  flex: 1 0 auto;
+  height: 4px;
+  left: 0;
+  margin: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+
+  &::before {
+    animation: linear-indeterminate 2s infinite ease;
+    background-color: #ffd700;
+    content: '';
+    height: 4px;
+    margin: 0;
+    width: 100%;
+  }
+
+}

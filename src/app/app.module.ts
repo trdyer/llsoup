@@ -11,9 +11,10 @@ import { AppComponent } from './app.component';
 import { ThermometerEffects } from './state/effects';
 import { reducer } from './state/reducer';
 import { ThermometerComponent } from './thermometer/thermometer.component';
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 
 @NgModule({
-  declarations: [AppComponent, ThermometerComponent],
+  declarations: [AppComponent, ThermometerComponent, ProgressBarComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

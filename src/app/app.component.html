@@ -6,5 +6,7 @@
   <button (click)="refresh()">Refresh</button>
 </section>
 <section class="data" [ngClass]="{ grid: listView$ | async }">
-  <app-thermometer *ngFor="let t of allData$ | async" [data]="t"></app-thermometer>
+  <app-thermometer *ngFor="let t of allData$ | async" [data]="t">
+    <app-progress-bar *ngIf="loading$ | async" progress-bar></app-progress-bar>
+  </app-thermometer>
 </section>
