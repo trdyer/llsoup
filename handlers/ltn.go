@@ -129,13 +129,13 @@ func GetAllData(c *gin.Context) {
 			communityRaised += val.Raised
 		}
 	}
+	combinedData["Community"] = &models.Thermometer{Raised: communityRaised, Goal: 677000}
+
 	totalRaised := 0.0
 	for city, j := range combinedData {
 		totalRaised += j.Raised
 		fmt.Printf("New! city: %s, cityTotal: %.2f, subtotal: %.2f\n", city, j.Raised, totalRaised)
 	}
-
-	combinedData["Community"] = &models.Thermometer{Raised: communityRaised, Goal: 677000}
 
 	combinedData[Canada] = &models.Thermometer{
 		Raised: totalRaised,
