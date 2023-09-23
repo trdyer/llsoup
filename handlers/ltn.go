@@ -40,13 +40,20 @@ const (
 )
 
 var CityIdMap = map[string]int{
-	Calgary:   1410,
-	Halifax:   1412,
-	Montreal:  1414,
-	Ottawa:    1415,
-	Toronto:   1417,
-	Vancouver: 1418,
-
+	Calgary:    1410,
+	Halifax:    1412,
+	Montreal:   1414,
+	Ottawa:     1415,
+	Toronto:    1417,
+	Vancouver:  1418,
+	Laval:      1450,
+	Belleville: 1470,
+	London:     1413,
+	Saskatoon:  1490,
+	Edmonton:   1411,
+	Winnipeg:   1419,
+	Regina:     1480,
+	StJohns:    1416,
 	// Edmonton:      1351,
 	// London:        1353,
 	// StJohns:       1356,
@@ -75,21 +82,7 @@ var CityGoalMap = map[string]uint64{
 	// Charlottetown: 27300,
 	// Blueprint:     1000000,
 	// Fredericton:   31500,
-	Canada: 5800000,
-}
-
-var communityIdMap = map[string]int{
-	Laval:      1450,
-	Belleville: 1470,
-	London:     1413,
-	Saskatoon:  1490,
-	Edmonton:   1411,
-	Winnipeg:   1419,
-	Regina:     1480,
-	StJohns:    1416,
-}
-
-var communityGoalMap = map[string]uint64{
+	Canada:     5800000,
 	Laval:      20000,
 	Belleville: 100000,
 	London:     130000,
@@ -98,6 +91,15 @@ var communityGoalMap = map[string]uint64{
 	Winnipeg:   100000,
 	Regina:     47000,
 	StJohns:    175000,
+}
+
+var includeCity = map[string]bool{
+	Calgary:   true,
+	Halifax:   true,
+	Montreal:  true,
+	Ottawa:    true,
+	Toronto:   true,
+	Vancouver: true,
 }
 
 func GetAllData(c *gin.Context) {
@@ -113,7 +115,7 @@ func GetAllData(c *gin.Context) {
 		c.AbortWithError(500, err)
 		return
 	}
-
+	communityRaised := 0.0
 	combinedData := models.AllThermometers{}
 	for city := range CityIdMap {
 		val, err := api.GetDataForCity(city)
@@ -121,24 +123,18 @@ func GetAllData(c *gin.Context) {
 			fmt.Printf("Error parsing LLS %s amount raised: %v", city, err)
 			val = &models.Thermometer{Raised: 0, Goal: 1}
 		}
-		combinedData[city] = val
+		if ok := includeCity[city]; ok {
+			combinedData[city] = val
+		} else {
+			communityRaised += val.Raised
+		}
 	}
 	totalRaised := 0.0
 	for city, j := range combinedData {
 		totalRaised += j.Raised
 		fmt.Printf("New! city: %s, cityTotal: %.2f, subtotal: %.2f\n", city, j.Raised, totalRaised)
 	}
-	communityRaised := 0.0
-	for community := range communityIdMap {
-		val, err := api.GetDataForCity(community)
-		if err != nil {
-			fmt.Printf("Error parsing LLD %s amount raised: %v", community, err)
-			val = &models.Thermometer{Raised: 0, Goal: 1}
-			continue
-		}
-		totalRaised += val.Raised
-		communityRaised += val.Raised
-	}
+
 	combinedData["Community"] = &models.Thermometer{Raised: communityRaised, Goal: 677000}
 
 	combinedData[Canada] = &models.Thermometer{
