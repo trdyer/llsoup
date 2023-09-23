@@ -23,17 +23,20 @@ const (
 	Ottawa    = "ottawa"
 	Toronto   = "toronto"
 	Vancouver = "vancouver"
-	// Edmonton      = "edmonton"
-	// StJohns       = "stjohns"
-	// London        = "london"
-	// Winnipeg      = "winnipeg"
 	// QuebecCity    = "QuebecCity"
-	// Regina        = "regina"
-	// Saskatoon     = "saskatoon"
 	// Charlottetown = "charlottetown"
 	// Fredericton   = "fredericton"
 	Canada = "canada"
 	// Blueprint     = "blueprint"
+	StJohns    = "stjohns"    //1416
+	Regina     = "regina"     // 1480
+	Winnipeg   = "winnipeg"   //1419
+	Edmonton   = "edmonton"   //1411
+	Saskatoon  = "saskatoon"  // 1490
+	London     = "london"     //1413
+	Laval      = "laval"      //1450
+	Belleville = "belleville" //1470
+
 )
 
 var CityIdMap = map[string]int{
@@ -75,6 +78,28 @@ var CityGoalMap = map[string]uint64{
 	Canada: 5800000,
 }
 
+var communityIdMap = map[string]int{
+	Laval:      1450,
+	Belleville: 1470,
+	London:     1413,
+	Saskatoon:  1490,
+	Edmonton:   1411,
+	Winnipeg:   1419,
+	Regina:     1480,
+	StJohns:    1416,
+}
+
+var communityGoalMap = map[string]uint64{
+	Laval:      20000,
+	Belleville: 100000,
+	London:     130000,
+	Saskatoon:  40000,
+	Edmonton:   65000,
+	Winnipeg:   100000,
+	Regina:     47000,
+	StJohns:    175000,
+}
+
 func GetAllData(c *gin.Context) {
 	jar, _ := cookiejar.New(nil)
 	client := &http.Client{
@@ -103,6 +128,19 @@ func GetAllData(c *gin.Context) {
 		totalRaised += j.Raised
 		fmt.Printf("New! city: %s, cityTotal: %.2f, subtotal: %.2f\n", city, j.Raised, totalRaised)
 	}
+	communityRaised := 0.0
+	for community := range communityIdMap {
+		val, err := api.GetDataForCity(community)
+		if err != nil {
+			fmt.Printf("Error parsing LLD %s amount raised: %v", community, err)
+			val = &models.Thermometer{Raised: 0, Goal: 1}
+			continue
+		}
+		totalRaised += val.Raised
+		communityRaised += val.Raised
+	}
+	combinedData["Community"] = &models.Thermometer{Raised: communityRaised, Goal: 677000}
+
 	combinedData[Canada] = &models.Thermometer{
 		Raised: totalRaised,
 		Goal:   5800000,
