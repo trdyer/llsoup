@@ -7,12 +7,10 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
-	"os"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/anaskhan96/soup"
 	"github.com/gin-gonic/gin"
 )
 
@@ -85,12 +83,21 @@ var CityGoalMap = map[string]uint64{
 }
 
 var includeCity = map[string]bool{
-	Calgary:   true,
-	Halifax:   true,
-	Montreal:  true,
-	Ottawa:    true,
-	Toronto:   true,
-	Vancouver: true,
+	Calgary:    true,
+	Halifax:    true,
+	Montreal:   true,
+	Ottawa:     true,
+	Toronto:    true,
+	Vancouver:  true,
+	Edmonton:   true,
+	London:     true,
+	StJohns:    true,
+	Winnipeg:   true,
+	Laval:      true,
+	Belleville: true,
+	Saskatoon:  true,
+	Regina:     true,
+	Kingston:   true,
 }
 
 func GetAllData(c *gin.Context) {
@@ -106,7 +113,7 @@ func GetAllData(c *gin.Context) {
 		c.AbortWithError(500, err)
 		return
 	}
-	communityRaised := 0.0
+	// communityRaised := 0.0
 	combinedData := models.AllThermometers{}
 	for city := range CityIdMap {
 		val, err := api.GetDataForCity(city)
@@ -116,11 +123,12 @@ func GetAllData(c *gin.Context) {
 		}
 		if ok := includeCity[city]; ok {
 			combinedData[city] = val
-		} else {
-			communityRaised += val.Raised
 		}
+		//  else {
+		// 	communityRaised += val.Raised
+		// }
 	}
-	combinedData["Community"] = &models.Thermometer{Raised: communityRaised, Goal: 677000}
+	// combinedData["Community"] = &models.Thermometer{Raised: communityRaised, Goal: 677000}
 
 	totalRaised := 0.0
 	for city, j := range combinedData {
@@ -133,17 +141,6 @@ func GetAllData(c *gin.Context) {
 		Goal:   5800000,
 	}
 	c.JSON(http.StatusOK, combinedData)
-}
-
-func GetThermometerDataFor(id int) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		thermDATA, err := getThermometerDataFromID(id)
-		if err != nil {
-			c.AbortWithError(http.StatusBadGateway, fmt.Errorf("Error parsing LLS Halifax amount raised"))
-			return
-		}
-		c.JSON(http.StatusOK, thermDATA)
-	}
 }
 
 func AttemptAPIAccess() gin.HandlerFunc {
@@ -181,29 +178,6 @@ func AttemptAPIAccess() gin.HandlerFunc {
 		}
 		c.JSON(http.StatusOK, combinedData)
 	}
-}
-
-func getThermometerDataFromID(id int) (*models.Thermometer, error) {
-	resp, err := soup.Get(fmt.Sprintf("https://secure.llscanada.org/site/TR?fr_id=%d&pg=entry&s_locale=en_CA", id))
-	if err != nil {
-		os.Exit(1)
-	}
-	doc := soup.HTMLParse(resp)
-	thermometer := doc.Find("div", "id", "thermometer")
-	goalh5 := thermometer.FindPrevElementSibling()
-	goal, err := parseGoalData(goalh5.Text())
-	if err != nil {
-		return nil, err
-	}
-	raisedH3 := thermometer.FindNextElementSibling().Find("h3")
-	dollarAmount, err := parseRaised(raisedH3.Text())
-	if err != nil {
-		return nil, err
-	}
-	return &models.Thermometer{
-		Raised: dollarAmount,
-		Goal:   goal,
-	}, nil
 }
 
 func parseGoalData(goal string) (uint64, error) {

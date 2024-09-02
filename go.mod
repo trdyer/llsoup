@@ -4,7 +4,6 @@ module llsoup
 go 1.23
 
 require (
-	github.com/anaskhan96/soup v1.2.4
 	github.com/gin-contrib/cors v1.6.0
 	github.com/gin-contrib/static v0.0.1
 	github.com/gin-gonic/gin v1.9.1
