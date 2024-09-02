@@ -37,8 +37,6 @@ const (
 	Laval      = "laval"      //1450
 	Belleville = "belleville" //1470
 	Kingston   = "kingston"   //1600
-	Unknown1   = "unknown"
-	Unknown2   = "unknown2"
 )
 
 var CityIdMap = map[string]int{
@@ -52,8 +50,6 @@ var CityIdMap = map[string]int{
 	Toronto:    1597,
 	Vancouver:  1598,
 	Winnipeg:   1599,
-	Unknown1:   1420,
-	Unknown2:   1430,
 	Laval:      1630,
 	Belleville: 1610,
 	Saskatoon:  1601,
