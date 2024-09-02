@@ -72,14 +72,15 @@ var CityGoalMap = map[string]uint64{
 	// Blueprint:     1000000,
 	// Fredericton:   31500,
 	Canada:     5800000,
-	Laval:      20000,
+	Laval:      2000,
 	Belleville: 100000,
-	London:     130000,
-	Saskatoon:  40000,
-	Edmonton:   65000,
-	Winnipeg:   100000,
-	Regina:     47000,
-	StJohns:    175000,
+	London:     175000,
+	Saskatoon:  50000,
+	Edmonton:   125000,
+	Winnipeg:   115000,
+	Regina:     25000,
+	StJohns:    230000,
+	Kingston:   25000,
 }
 
 var includeCity = map[string]bool{
