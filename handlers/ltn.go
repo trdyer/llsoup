@@ -36,36 +36,38 @@ const (
 	London     = "london"     //1413
 	Laval      = "laval"      //1450
 	Belleville = "belleville" //1470
+	Kingston   = "kingston"   //1600
 	Unknown1   = "unknown"
 	Unknown2   = "unknown2"
 )
 
 var CityIdMap = map[string]int{
-	Calgary:    1410,
-	Edmonton:   1411,
-	Halifax:    1412,
-	London:     1413,
-	Montreal:   1414,
-	Ottawa:     1415,
-	StJohns:    1416,
-	Toronto:    1417,
-	Vancouver:  1418,
-	Winnipeg:   1419,
+	Calgary:    1590,
+	Edmonton:   1591,
+	Halifax:    1592,
+	London:     1593,
+	Montreal:   1594,
+	Ottawa:     1595,
+	StJohns:    1596,
+	Toronto:    1597,
+	Vancouver:  1598,
+	Winnipeg:   1599,
 	Unknown1:   1420,
 	Unknown2:   1430,
-	Laval:      1450,
-	Belleville: 1470,
-	Saskatoon:  1490,
-	Regina:     1480,
+	Laval:      1630,
+	Belleville: 1610,
+	Saskatoon:  1601,
+	Regina:     1620,
+	Kingston:   1600,
 }
 
 var CityGoalMap = map[string]uint64{
-	Calgary:   550000,
-	Halifax:   824000,
+	Calgary:   300000,
+	Halifax:   1000000,
 	Montreal:  1200000,
-	Ottawa:    352500,
-	Toronto:   1341500,
-	Vancouver: 1075000,
+	Ottawa:    377000,
+	Toronto:   1400000,
+	Vancouver: 1000000,
 	// London:        275000,
 	// StJohns:       200000,
 	// Winnipeg:      225000,
